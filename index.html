@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Satisfying Skills Player</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="player" id="player">
+            <video id="video" poster="poster.jpg" preload="metadata">
+                <source src="video.mp4" type="video/mp4" />
+                <track
+                    kind="subtitles"
+                    label="Русский"
+                    srclang="ru"
+                    src="subtitles_ru.vtt"
+                    default
+                />
+                <track
+                    kind="subtitles"
+                    label="English"
+                    srclang="en"
+                    src="subtitles_en.vtt"
+                />
+            </video>
+
+            <div class="controls">
+                <button id="play-pause" class="btn" aria-label="Play">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+
+                <div class="progress-wrapper">
+                    <div class="progress" id="progress">
+                        <div class="progress-bar"></div>
+                        <div class="progress-handle"></div>
+                    </div>
+                    <div class="time">
+                        <span id="current">00:00</span> /
+                        <span id="duration">00:00</span>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <!-- ГРОМКОСТЬ -->
+                    <div class="volume-container">
+                        <button
+                            id="mute"
+                            class="btn volume-btn"
+                            aria-label="Mute"
+                        >
+                            <svg class="icon volume-on" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+                                />
+                            </svg>
+                            <svg class="icon volume-off" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zM3 9v6h4l5 5V4L7 9H3z"
+                                />
+                            </svg>
+                        </button>
+                        <input
+                            type="range"
+                            id="volume"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value="1"
+                            class="volume-slider"
+                            orient="vertical"
+                        />
+                    </div>
+
+                    <!-- НАСТРОЙКИ -->
+                    <div class="settings-container">
+                        <button
+                            id="settings-btn"
+                            class="btn"
+                            aria-label="Settings"
+                        >
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path
+                                    d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.479.479 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.04.64.09.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+                                />
+                            </svg>
+                        </button>
+                        <div class="settings-menu" id="settings-menu">
+                            <div class="menu-section">
+                                <div class="menu-title">Скорость</div>
+                                <div class="menu-options" id="speed-options">
+                                    <div class="option" data-speed="0.5">
+                                        0.5x
+                                    </div>
+                                    <div class="option" data-speed="0.75">
+                                        0.75x
+                                    </div>
+                                    <div class="option active" data-speed="1">
+                                        1x
+                                    </div>
+                                    <div class="option" data-speed="1.25">
+                                        1.25x
+                                    </div>
+                                    <div class="option" data-speed="1.5">
+                                        1.5x
+                                    </div>
+                                    <div class="option" data-speed="2">2x</div>
+                                </div>
+                            </div>
+
+                            <div class="menu-section">
+                                <div class="menu-title">Субтитры</div>
+                                <div class="menu-options" id="subtitle-options">
+                                    <div class="option active" data-lang="off">
+                                        Выкл
+                                    </div>
+                                    <div class="option" data-lang="ru">
+                                        Русский
+                                    </div>
+                                    <div class="option" data-lang="en">
+                                        English
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="menu-section">
+                                <div class="menu-title">Дополнительно</div>
+                                <div class="menu-options">
+                                    <div class="option" id="pip-btn">
+                                        <svg
+                                            class="icon"
+                                            viewBox="0 0 24 24"
+                                            style="
+                                                width: 16px;
+                                                height: 16px;
+                                                vertical-align: middle;
+                                                margin-right: 6px;
+                                            "
+                                        >
+                                            <path
+                                                d="M19 11h-8v6h8v-6zm4 10V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2z"
+                                            />
+                                        </svg>
+                                        Picture-in-Picture
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FULLSCREEN -->
+                    <button id="fullscreen" class="btn" aria-label="Fullscreen">
+                        <svg class="icon expand" viewBox="0 0 24 24">
+                            <path
+                                d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+                            />
+                        </svg>
+                        <svg class="icon compress" viewBox="0 0 24 24">
+                            <path
+                                d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
