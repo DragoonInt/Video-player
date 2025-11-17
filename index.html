@@ -8,25 +8,24 @@
     </head>
     <body>
         <div class="player" id="player">
-            <video id="video" poster="poster.jpg" preload="metadata">
-                <source src="video.mp4" type="video/mp4" />
-                <track
-                    kind="subtitles"
-                    label="Русский"
-                    srclang="ru"
-                    src="subtitles_ru.vtt"
-                    default
-                />
-                <track
-                    kind="subtitles"
-                    label="English"
-                    srclang="en"
-                    src="subtitles_en.vtt"
-                />
-            </video>
+            <!-- Черный фон вместо видео -->
+            <div class="video-placeholder">
+                <div class="video-title-container">
+                    <div class="video-title" id="video-title">
+                        Демонстрация возможностей видеоплеера
+                    </div>
+                </div>
+                <div class="demo-label">Демо-режим с субтитрами</div>
+                <!-- Контейнер для субтитров -->
+                <div class="subtitles-display" id="subtitles-display"></div>
+            </div>
 
             <div class="controls">
-                <button id="play-pause" class="btn" aria-label="Play">
+                <button
+                    id="play-pause"
+                    class="btn control-btn"
+                    aria-label="Play"
+                >
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                     </svg>
@@ -38,17 +37,18 @@
                         <div class="progress-handle"></div>
                     </div>
                     <div class="time">
-                        <span id="current">00:00</span> /
+                        <span id="current">00:00</span>
+                        <span class="time-separator">/</span>
                         <span id="duration">00:00</span>
                     </div>
                 </div>
 
-                <div class="right">
+                <div class="right-controls">
                     <!-- ГРОМКОСТЬ -->
-                    <div class="volume-container">
+                    <div class="control-container">
                         <button
                             id="mute"
-                            class="btn volume-btn"
+                            class="btn control-btn"
                             aria-label="Mute"
                         >
                             <svg class="icon volume-on" viewBox="0 0 24 24">
@@ -62,23 +62,188 @@
                                 />
                             </svg>
                         </button>
-                        <input
-                            type="range"
-                            id="volume"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value="1"
-                            class="volume-slider"
-                            orient="vertical"
-                        />
+                        <div class="volume-popup">
+                            <input
+                                type="range"
+                                id="volume"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value="1"
+                                class="volume-slider"
+                                orient="vertical"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- СКОРОСТЬ -->
+                    <div class="control-container">
+                        <button
+                            id="speed-btn"
+                            class="btn control-btn dropdown-btn"
+                            aria-label="Speed"
+                        >
+                            <span
+                                class="control-value"
+                                id="current-speed-display"
+                                >1x</span
+                            >
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="speed-menu">
+                            <div class="speed-slider-container">
+                                <input
+                                    type="range"
+                                    id="speed-slider"
+                                    min="0.5"
+                                    max="2"
+                                    step="0.01"
+                                    value="1"
+                                    class="speed-slider"
+                                />
+                                <div class="speed-markers">
+                                    <span class="speed-marker" data-speed="0.5"
+                                        >0.5x</span
+                                    >
+                                    <span class="speed-marker" data-speed="0.75"
+                                        >0.75x</span
+                                    >
+                                    <span
+                                        class="speed-marker active"
+                                        data-speed="1"
+                                        >1x</span
+                                    >
+                                    <span class="speed-marker" data-speed="1.25"
+                                        >1.25x</span
+                                    >
+                                    <span class="speed-marker" data-speed="1.5"
+                                        >1.5x</span
+                                    >
+                                    <span class="speed-marker" data-speed="2"
+                                        >2x</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- КАЧЕСТВО -->
+                    <div class="control-container">
+                        <button
+                            id="quality-btn"
+                            class="btn control-btn dropdown-btn"
+                            aria-label="Quality"
+                        >
+                            <span
+                                class="control-value"
+                                id="current-quality-display"
+                                >Авто</span
+                            >
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="quality-menu">
+                            <div class="menu-options">
+                                <div class="option active" data-quality="auto">
+                                    <div class="option-content">
+                                        <span class="option-main">Авто</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="2160">
+                                    <div class="option-content">
+                                        <span class="option-main">2160p</span>
+                                        <span class="option-sub">4K</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="1440">
+                                    <div class="option-content">
+                                        <span class="option-main">1440p</span>
+                                        <span class="option-sub">2K</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="1080">
+                                    <div class="option-content">
+                                        <span class="option-main">1080p</span>
+                                        <span class="option-sub">FullHD</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="720">
+                                    <div class="option-content">
+                                        <span class="option-main">720p</span>
+                                        <span class="option-sub">HD</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="480">
+                                    <div class="option-content">
+                                        <span class="option-main">480p</span>
+                                        <span class="option-sub">SD</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-quality="360">
+                                    <div class="option-content">
+                                        <span class="option-main">360p</span>
+                                        <span class="option-sub">SD</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- СУБТИТРЫ -->
+                    <div class="control-container">
+                        <button
+                            id="subtitles-btn"
+                            class="btn control-btn dropdown-btn"
+                            aria-label="Subtitles"
+                        >
+                            <span
+                                class="control-value"
+                                id="current-subtitles-display"
+                                >Субтитры</span
+                            >
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="subtitles-menu">
+                            <div class="menu-options">
+                                <div class="option active" data-lang="off">
+                                    <div class="option-content">
+                                        <span class="option-main">Выкл</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-lang="ru">
+                                    <div class="option-content">
+                                        <span class="option-main">Русский</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div class="option" data-lang="en">
+                                    <div class="option-content">
+                                        <span class="option-main">English</span>
+                                    </div>
+                                    <div class="checkmark"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- НАСТРОЙКИ -->
-                    <div class="settings-container">
+                    <div class="control-container">
                         <button
                             id="settings-btn"
-                            class="btn"
+                            class="btn control-btn dropdown-btn"
                             aria-label="Settings"
                         >
                             <svg class="icon" viewBox="0 0 24 24">
@@ -86,83 +251,45 @@
                                     d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.479.479 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.04.64.09.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
                                 />
                             </svg>
+                            <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
                         </button>
-                        <div class="settings-menu" id="settings-menu">
-                            <div class="menu-section">
-                                <div class="menu-title">Скорость</div>
-                                <div class="menu-options" id="speed-options">
-                                    <div class="option" data-speed="0.5">
-                                        0.5x
-                                    </div>
-                                    <div class="option" data-speed="0.75">
-                                        0.75x
-                                    </div>
-                                    <div class="option active" data-speed="1">
-                                        1x
-                                    </div>
-                                    <div class="option" data-speed="1.25">
-                                        1.25x
-                                    </div>
-                                    <div class="option" data-speed="1.5">
-                                        1.5x
-                                    </div>
-                                    <div class="option" data-speed="2">2x</div>
-                                </div>
-                            </div>
-
-                            <div class="menu-section">
-                                <div class="menu-title">Субтитры</div>
-                                <div class="menu-options" id="subtitle-options">
-                                    <div class="option active" data-lang="off">
-                                        Выкл
-                                    </div>
-                                    <div class="option" data-lang="ru">
-                                        Русский
-                                    </div>
-                                    <div class="option" data-lang="en">
-                                        English
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="menu-section">
-                                <div class="menu-title">Дополнительно</div>
-                                <div class="menu-options">
-                                    <div class="option" id="pip-btn">
-                                        <svg
-                                            class="icon"
-                                            viewBox="0 0 24 24"
-                                            style="
-                                                width: 16px;
-                                                height: 16px;
-                                                vertical-align: middle;
-                                                margin-right: 6px;
-                                            "
-                                        >
-                                            <path
-                                                d="M19 11h-8v6h8v-6zm4 10V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2z"
-                                            />
-                                        </svg>
-                                        Picture-in-Picture
-                                    </div>
+                        <div class="dropdown-menu" id="settings-menu">
+                            <div class="menu-options">
+                                <div class="option" id="pip-btn">
+                                    <svg class="icon" viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 1.98 2 1.98h18c1.1 0 2-.88 2-1.98V5c0-1.1-.9-2-2-2zm0 16.01H3V4.98h18v14.03z"
+                                        />
+                                    </svg>
+                                    <span class="option-text"
+                                        >Картинка в картинке</span
+                                    >
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- FULLSCREEN -->
-                    <button id="fullscreen" class="btn" aria-label="Fullscreen">
-                        <svg class="icon expand" viewBox="0 0 24 24">
-                            <path
-                                d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
-                            />
-                        </svg>
-                        <svg class="icon compress" viewBox="0 0 24 24">
-                            <path
-                                d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"
-                            />
-                        </svg>
-                    </button>
+                    <div class="control-container">
+                        <button
+                            id="fullscreen"
+                            class="btn control-btn"
+                            aria-label="Fullscreen"
+                        >
+                            <svg class="icon expand" viewBox="0 0 24 24">
+                                <path
+                                    d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+                                />
+                            </svg>
+                            <svg class="icon compress" viewBox="0 0 24 24">
+                                <path
+                                    d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
