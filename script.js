@@ -1,7 +1,6 @@
-// Настройки видео (можно загружать из JSON файла)
 const videoSettings = {
   title: "Демонстрация возможностей видеоплеера",
-  duration: 300, // 5 минут
+  duration: 300,
   subtitles: {
     ru: [
       { start: 5, end: 10, text: "Добро пожаловать в демо-режим видеоплеера!" },
@@ -84,7 +83,6 @@ const videoSettings = {
   defaultQuality: "auto",
 };
 
-// Создаем заглушку для видео
 const video = {
   paused: true,
   muted: false,
@@ -97,14 +95,11 @@ const video = {
   quality: videoSettings.defaultQuality,
 };
 
-// Текущие настройки субтитров
 let currentSubtitleLang = "off";
 let currentSubtitles = [];
 
-// Магнитные значения скорости
 const speedSnapPoints = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
-// Эмуляция методов видео
 video.play = function () {
   this.paused = false;
   this._startProgressSimulation();
@@ -137,7 +132,6 @@ video._startProgressSimulation = function () {
   }, 100);
 };
 
-// Получаем элементы DOM
 const player = document.getElementById("player");
 const playPause = document.getElementById("play-pause");
 const progress = document.getElementById("progress");
@@ -156,7 +150,6 @@ const pipBtn = document.getElementById("pip-btn");
 const subtitlesDisplay = document.getElementById("subtitles-display");
 const videoTitle = document.getElementById("video-title");
 
-// Элементы выпадающих списков
 const speedBtn = document.getElementById("speed-btn");
 const speedMenu = document.getElementById("speed-menu");
 const speedSlider = document.getElementById("speed-slider");
@@ -177,7 +170,6 @@ const currentSubtitlesDisplay = document.getElementById(
 const settingsBtn = document.getElementById("settings-btn");
 const settingsMenu = document.getElementById("settings-menu");
 
-// === ФУНКЦИИ ДЛЯ СУБТИТРОВ ===
 function updateSubtitles() {
   if (currentSubtitleLang === "off") {
     subtitlesDisplay.classList.remove("show");
@@ -190,10 +182,8 @@ function updateSubtitles() {
   );
 
   if (activeSubtitles.length > 0) {
-    // Показываем субтитры
     const subtitleHTML = activeSubtitles
       .map((sub) => {
-        // Обрабатываем переносы строк
         const lines = sub.text.split("\n");
         return lines
           .map((line) => `<div class="subtitle-line">${line}</div>`)
@@ -204,7 +194,6 @@ function updateSubtitles() {
     subtitlesDisplay.innerHTML = subtitleHTML;
     subtitlesDisplay.classList.add("show");
   } else {
-    // Скрываем субтитры
     subtitlesDisplay.classList.remove("show");
   }
 }
@@ -219,16 +208,14 @@ function setSubtitlesLanguage(lang) {
   } else {
     currentSubtitles = videoSettings.subtitles[lang] || [];
     currentSubtitlesDisplay.textContent = lang === "ru" ? "Русский" : "English";
-    updateSubtitles(); // Обновляем сразу при смене языка
+    updateSubtitles();
   }
 }
 
-// === ФУНКЦИИ ДЛЯ СКОРОСТИ ===
 function updateSpeedDisplay(speed) {
   currentSpeedDisplay.textContent = `${speed}x`;
   video.playbackRate = speed;
 
-  // Обновляем маркеры скорости
   document.querySelectorAll(".speed-marker").forEach((marker) => {
     const markerSpeed = parseFloat(marker.dataset.speed);
     if (Math.abs(markerSpeed - speed) < 0.01) {
@@ -240,7 +227,6 @@ function updateSpeedDisplay(speed) {
 }
 
 function snapToSpeed(value) {
-  // Находим ближайшую магнитную точку
   let closestSpeed = speedSnapPoints[0];
   let minDiff = Math.abs(value - closestSpeed);
 
@@ -255,16 +241,13 @@ function snapToSpeed(value) {
   return closestSpeed;
 }
 
-// === УПРАВЛЕНИЕ ВЫПАДАЮЩИМИ СПИСКАМИ ===
 let activeDropdown = null;
 
 function toggleDropdown(menu, button, container) {
   const isOpening = menu !== activeDropdown;
 
-  // Закрываем все выпадающие списки
   closeAllDropdowns();
 
-  // Если открываем новое меню
   if (isOpening) {
     menu.classList.add("open");
     if (container) {
@@ -287,7 +270,6 @@ function closeAllDropdowns() {
   activeDropdown = null;
 }
 
-// Обработчики для кнопок выпадающих списков
 speedBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   toggleDropdown(speedMenu, speedBtn, speedBtn.closest(".control-container"));
@@ -320,19 +302,16 @@ settingsBtn.addEventListener("click", (e) => {
   );
 });
 
-// Закрытие меню при клике вне
 document.addEventListener("click", () => {
   closeAllDropdowns();
 });
 
-// Предотвращаем закрытие при клике внутри меню
 document.querySelectorAll(".dropdown-menu").forEach((menu) => {
   menu.addEventListener("click", (e) => {
     e.stopPropagation();
   });
 });
 
-// === ФОРМАТ ВРЕМЕНИ ===
 const formatTime = (sec) => {
   if (isNaN(sec)) return "00:00";
   const m = Math.floor(sec / 60)
@@ -344,7 +323,6 @@ const formatTime = (sec) => {
   return `${m}:${s}`;
 };
 
-// === PLAY/PAUSE ===
 const togglePlay = () => {
   if (video.paused) {
     video.play();
@@ -363,7 +341,6 @@ const updatePlayPauseButton = () => {
   }
 };
 
-// === ПРОГРЕСС ===
 const updateProgress = () => {
   if (isNaN(video.duration)) return;
   const percent = (video.currentTime / video.duration) * 100;
@@ -373,7 +350,6 @@ const updateProgress = () => {
   durationEl.textContent = formatTime(video.duration);
 };
 
-// === ПЕРЕМОТКА ===
 let isScrubbing = false;
 progress.addEventListener("mousedown", (e) => {
   isScrubbing = true;
@@ -387,10 +363,9 @@ function scrub(e) {
   const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
   video.currentTime = pos * video.duration;
   updateProgress();
-  updateSubtitles(); // Обновляем субтитры при перемотке
+  updateSubtitles();
 }
 
-// === ГРОМКОСТЬ ===
 muteBtn.addEventListener("click", () => {
   video.muted = !video.muted;
   updateVolumeIcons();
@@ -403,7 +378,6 @@ volumeSlider.addEventListener("input", () => {
   updateVolumeIcons();
 });
 
-// Колесо мыши
 muteBtn.addEventListener("wheel", (e) => {
   e.preventDefault();
   const delta = e.deltaY > 0 ? -0.05 : 0.05;
@@ -421,7 +395,6 @@ function updateVolumeIcons() {
   muteBtn.classList.toggle("muted", isMuted);
 }
 
-// === СКОРОСТЬ (ПОЛЗУНОК) ===
 speedSlider.addEventListener("input", (e) => {
   const speed = parseFloat(e.target.value);
   updateSpeedDisplay(speed);
@@ -434,7 +407,6 @@ speedSlider.addEventListener("change", (e) => {
   updateSpeedDisplay(snappedSpeed);
 });
 
-// Клик по маркерам скорости
 document.querySelectorAll(".speed-marker").forEach((marker) => {
   marker.addEventListener("click", () => {
     const speed = parseFloat(marker.dataset.speed);
@@ -443,7 +415,6 @@ document.querySelectorAll(".speed-marker").forEach((marker) => {
   });
 });
 
-// === КАЧЕСТВО ===
 document.querySelectorAll("#quality-menu .option").forEach((opt) => {
   opt.addEventListener("click", () => {
     document
@@ -452,16 +423,13 @@ document.querySelectorAll("#quality-menu .option").forEach((opt) => {
     opt.classList.add("active");
     video.quality = opt.dataset.quality;
 
-    // Обновляем отображаемое значение
     const qualityText = opt.querySelector(".option-main").textContent;
     currentQualityDisplay.textContent = qualityText;
 
-    console.log(`Качество изменено на: ${video.quality}`);
     closeAllDropdowns();
   });
 });
 
-// === СУБТИТРЫ ===
 document.querySelectorAll("#subtitles-menu .option").forEach((opt) => {
   opt.addEventListener("click", () => {
     document
@@ -470,21 +438,17 @@ document.querySelectorAll("#subtitles-menu .option").forEach((opt) => {
     opt.classList.add("active");
     const lang = opt.dataset.lang;
 
-    // Устанавливаем язык субтитров
     setSubtitlesLanguage(lang);
 
-    console.log(`Субтитры изменены на: ${lang}`);
     closeAllDropdowns();
   });
 });
 
-// === PiP ===
 pipBtn.addEventListener("click", async () => {
   alert("Picture-in-Picture недоступно для демо-режима");
   closeAllDropdowns();
 });
 
-// === FULLSCREEN ===
 fullscreenBtn.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     player.classList.add("fs-transition");
@@ -507,20 +471,16 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-// === ЗАГРУЗКА НАСТРОЕК ВИДЕО ===
 function loadVideoSettings(settings) {
-  // Устанавливаем название видео
   if (settings.title) {
     videoTitle.textContent = settings.title;
   }
 
-  // Устанавливаем продолжительность
   if (settings.duration) {
     video.duration = settings.duration;
     durationEl.textContent = formatTime(settings.duration);
   }
 
-  // Инициализируем качество
   if (settings.defaultQuality) {
     video.quality = settings.defaultQuality;
     const qualityOption = document.querySelector(
@@ -530,25 +490,18 @@ function loadVideoSettings(settings) {
       qualityOption.click();
     }
   }
-
-  console.log("Настройки видео загружены:", settings);
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ===
 const initializePlayer = () => {
-  // Загружаем настройки видео
   loadVideoSettings(videoSettings);
 
   updateVolumeIcons();
   updatePlayPauseButton();
   updateProgress();
-  // Инициализируем субтитры выключенными
   setSubtitlesLanguage("off");
-  // Инициализируем отображение скорости
   updateSpeedDisplay(1);
 };
 
-// === АВТО-СКРЫТИЕ ===
 let hideTimer;
 const showControls = () => {
   player.querySelector(".controls").style.opacity = "1";
@@ -561,7 +514,6 @@ const showControls = () => {
 };
 player.addEventListener("mousemove", showControls);
 
-// Клик по плейеру для play/pause
 player.addEventListener("click", (e) => {
   if (
     !e.target.closest(".controls") &&
@@ -573,5 +525,4 @@ player.addEventListener("click", (e) => {
 
 playPause.addEventListener("click", togglePlay);
 
-// Инициализация при загрузке
 initializePlayer();
